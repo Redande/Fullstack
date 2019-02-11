@@ -47,11 +47,7 @@ const App = () => {
         showSuccessfulMessageForFiveSeconds(`Lisättiin ${personObject.name}`);
       })
       .catch(error => {
-        showErrorMessageForFiveSeconds(
-          `Jotakin meni pieleen, minkä vuoksi henkilöä ${
-            personObject.name
-          } ei välttämättä lisätty puhelinluetteloon`
-        );
+        showErrorMessageForFiveSeconds(error.response.data.error);
         updatePersons();
       });
   };
@@ -79,17 +75,17 @@ const App = () => {
   const addPerson = event => {
     event.preventDefault();
     const personObject = { name: newName, number: newNumber };
-    if (persons.map(person => person.name).includes(newName)) {
-      if (
-        window.confirm(
-          `${newName} on jo luettelossa, korvataanko vanha numero uudella?`
-        )
-      ) {
-        updatePerson(newName, personObject);
-      }
-    } else {
-      addPersonToDb(personObject);
-    }
+    // if (persons.map(person => person.name).includes(newName)) {
+    //   if (
+    //     window.confirm(
+    //       `${newName} on jo luettelossa, korvataanko vanha numero uudella?`
+    //     )
+    //   ) {
+    //     updatePerson(newName, personObject);
+    //   }
+    // } else {
+    addPersonToDb(personObject);
+    // }
   };
 
   const removePerson = person => {
