@@ -20,6 +20,12 @@ const getTokenFrom = request => {
 blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
 
+  if (!body.title || !body.url) {
+    return response.status(400).json({
+      error: 'missing title or url'
+    })
+  }
+
   const token = getTokenFrom(request)
 
   try {
@@ -32,7 +38,7 @@ blogsRouter.post('/', async (request, response, next) => {
 
     const blog = new Blog({
       title: body.title,
-      author: body.author,
+      author: user.name,
       url: body.url,
       likes: body.likes === undefined ? 0 : body.likes,
       user: user._id,
@@ -51,6 +57,16 @@ blogsRouter.delete('/:id', async (request, response, next) => {
   try {
     await Blog.findByIdAndRemove(request.params.id)
     response.status(204).end()
+  } catch (exception) {
+    next(exception)
+  }
+})
+
+blogsRouter.put('/:id', async (request, response, next) => {
+  try {
+    const blog = await Blog.findById(request.params.id)
+    blog.likes = request.body.likes
+    blog.save()
   } catch (exception) {
     next(exception)
   }
