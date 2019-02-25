@@ -1,10 +1,10 @@
+/* eslint react/prop-types: 0 */
+
 import React from 'react'
 import PropTypes from 'prop-types'
 
 const LoginForm = ({
   handleSubmit,
-  handleUsernameChange,
-  handlePasswordChange,
   username,
   password
 }) => {
@@ -15,18 +15,11 @@ const LoginForm = ({
       <form onSubmit={handleSubmit}>
         <div>
           käyttäjätunnus
-          <input
-            value={username}
-            onChange={handleUsernameChange}
-          />
+          <input {...username} />
         </div>
         <div>
           salasana
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
+          <input {...password} />
         </div>
         <button type="submit">kirjaudu</button>
       </form>
@@ -36,8 +29,6 @@ const LoginForm = ({
 
 LoginForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  handleUsernameChange: PropTypes.func.isRequired,
-  handlePasswordChange: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired
 }

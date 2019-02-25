@@ -1,3 +1,5 @@
+/* eslint react/prop-types: 0 */
+
 import React, { useState, useImperativeHandle } from 'react'
 import PropTypes from 'prop-types'
 

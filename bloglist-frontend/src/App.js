@@ -6,16 +6,17 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { useField } from './hooks'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
   const [successfulMessage, setSuccessfulMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const username = useField('text')
+  const password = useField('password')
   const [user, setUser] = useState(null)
 
   const blogFormRef = React.createRef()
@@ -39,12 +40,12 @@ const App = () => {
     event.preventDefault()
     blogFormRef.current.toggleVisibility()
     const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
+      title: title.textField.value,
+      author: author.textField.value,
+      url: url.textField.value
     }
-
-    setSuccessfulMessage(`a new blog ${newTitle} by ${newAuthor} added`)
+    console.log(blogObject)
+    setSuccessfulMessage(`a new blog ${title.textField.value} by ${author.textField.value} added`)
     setTimeout(() => {
       setSuccessfulMessage(null)
     }, 5000)
@@ -52,9 +53,9 @@ const App = () => {
     blogService
       .create(blogObject).then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
+        title.reset()
+        author.reset()
+        url.reset()
       })
   }
 
@@ -81,23 +82,15 @@ const App = () => {
     }
   }
 
-  const handleTitleChange = (event) => {
-    setNewTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setNewUrl(event.target.value)
-  }
-
   const handleLogin = async (event) => {
     event.preventDefault()
+
+    const un = username.textField.value
+    const pw = password.textField.value
+
     try {
       const user = await loginService.login({
-        username, password,
+        username: un, password: pw
       })
 
       window.localStorage.setItem(
@@ -106,8 +99,8 @@ const App = () => {
 
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
+      username.reset()
+      password.reset()
     } catch (exception) {
       setErrorMessage('wrong username or password')
       setTimeout(() => {
@@ -124,10 +117,8 @@ const App = () => {
 
   const loginForm = () => (
     <LoginForm
-      username={username}
-      password={password}
-      handleUsernameChange={({ target }) => setUsername(target.value)}
-      handlePasswordChange={({ target }) => setPassword(target.value)}
+      username={username.textField}
+      password={password.textField}
       handleSubmit={handleLogin}
     />
   )
@@ -135,12 +126,9 @@ const App = () => {
   const blogForm = () => (
     <Togglable buttonLabel="create new" ref={blogFormRef}>
       <BlogForm
-        title={newTitle}
-        author={newAuthor}
-        url={newUrl}
-        onTitleChange={handleTitleChange}
-        onAuthorChange={handleAuthorChange}
-        onUrlChange={handleUrlChange}
+        title={title.textField}
+        author={author.textField}
+        url={url.textField}
         onSubmit={addBlog}
       />
     </Togglable>

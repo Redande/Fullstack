@@ -22,20 +22,18 @@ const Blog = ({
   }
 
   return (
-    <div style={blogStyle}>
-      <div onClick={toggleExpansion}>
-        {expanded ?
-          <div>
-            <p>{blog.title} {blog.author}</p>
-            <a href={'http://' + blog.url}>{blog.url}</a>
-            <p>{blog.likes} likes <button onClick={() => handleLikeClick(blog)}>like</button></p>
-            <p>added by {blog.user.name}</p>
-            {currentUser.username === blog.user.username && <button onClick={() => handleRemoveClick(blog)}>remove</button>}
-          </div> :
-          <div>{blog.title} {blog.author}</div>
-        }
+    <div className="blogContainer" style={blogStyle} onClick={toggleExpansion}>
+      {expanded ?
+        <div>
+          <p>{blog.title} {blog.author}</p>
+          <a href={'http://' + blog.url}>{blog.url}</a>
+          <p>{blog.likes} likes <button onClick={() => handleLikeClick(blog)}>like</button></p>
+          <p>added by {blog.user.name}</p>
+          {currentUser.username === blog.user.username && <button onClick={() => handleRemoveClick(blog)}>remove</button>}
+        </div> :
+        <div>{blog.title} {blog.author}</div>
+      }
 
-      </div>
     </div>
   )
 }
